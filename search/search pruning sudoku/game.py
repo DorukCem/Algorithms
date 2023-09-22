@@ -1,6 +1,7 @@
 import pygame
 from solver import *
 from sys import exit
+import time
 
 NUM_SQUARES = 9
 SQUARE_SIZE = 60
@@ -51,7 +52,14 @@ board = [
 ]
 
 cache = cache_valid_values(board)
+start = time.time()
+ 
 solve_with_cache(board, cache)
+ 
+# record end time
+end = time.time()
+print("The time of execution of above program is :",
+   (end-start) * 10**3, "ms")
 
 while True:
    for event in pygame.event.get():
