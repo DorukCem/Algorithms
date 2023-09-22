@@ -50,7 +50,8 @@ board = [
    [0,5,0, 0,0,0, 6,0,0],
 ]
 
-solve(board)
+cache = cache_valid_values(board)
+solve_with_cache(board, cache)
 
 while True:
    for event in pygame.event.get():
@@ -63,4 +64,3 @@ while True:
    draw_board(screen, board)
 
    pygame.display.update()
-   clock.tick(60)
