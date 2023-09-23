@@ -115,6 +115,12 @@ def solve(board):
    return False
 
 def solve_with_cache(board, cache):
+
+   values_found = True
+   while values_found:
+      cache_valid = cache_valid_values(board)
+      values_found = ordered_valid_valus(board, cache_valid)
+
    empty_tile = find_empty(board)
    if empty_tile == None:
       return True
