@@ -1,5 +1,33 @@
 from collections import Counter
 
+# Brute force backtracking
+def solve(board):
+   empty_tile = find_empty(board)
+   if empty_tile == None:
+      return True
+   else:
+      row, col = empty_tile
+
+   for num in range(1, 10):
+      if is_valid(board, num, row, col):
+         board[row][col] = num
+
+         if solve(board):
+            return True
+          
+         # If this num is not the answer we erase it
+         board[row][col] = 0
+   
+   return False
+
+# Solves only fully constrained boards
+def solve_with_cache(board):
+   values_found = True
+   while values_found:
+      cache_valid = cache_valid_values(board)
+      values_found = ordered_valid_valus(board, cache_valid)
+
+
 # is num a passable answer for the given row and column  
 def is_valid(board, num, row, col):
    for y in range(len(board)):
@@ -94,47 +122,3 @@ def ordered_valid_valus(board, cache):
 
    return cache
 
-
-def solve(board):
-   empty_tile = find_empty(board)
-   if empty_tile == None:
-      return True
-   else:
-      row, col = empty_tile
-
-   for num in range(1, 10):
-      if is_valid(board, num, row, col):
-         board[row][col] = num
-
-         if solve(board):
-            return True
-          
-         # If this num is not the answer we erase it
-         board[row][col] = 0
-   
-   return False
-
-def solve_with_cache(board, cache):
-
-   values_found = True
-   while values_found:
-      cache_valid = cache_valid_values(board)
-      values_found = ordered_valid_valus(board, cache_valid)
-
-   empty_tile = find_empty(board)
-   if empty_tile == None:
-      return True
-   else:
-      row, col = empty_tile
-
-   for num in cache[(row,col)]:
-      if is_valid(board, num, row, col):
-         board[row][col] = num
-
-         if solve_with_cache(board, cache):
-            return True
-          
-         # If this num is not the answer we erase it
-         board[row][col] = 0
-   
-   return False

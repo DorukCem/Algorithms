@@ -51,11 +51,9 @@ board = [
    [0,5,0, 0,0,0, 6,0,0],
 ]
 
-cache = cache_valid_values(board)
-ordered_cache = ordered_valid_valus(board, cache)
 start = time.time()
  
-solve_with_cache(board, ordered_cache)
+solve_with_cache(board)
  
 # record end time
 end = time.time()
