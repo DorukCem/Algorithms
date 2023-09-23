@@ -49,8 +49,36 @@ def cache_valid_values(board):
             cache[ (i, j) ] = allowed_values(board, i, j)
    return cache
 
+
+# Sort the lists in the cache 
+# ordering the lists of legitimate values for each cell by chance of prevelance, thus the numbers 
+# with lower frequency of appearance in the row cells will be more likely to be the correct options
+# -----
+# For example: 
+#  We can put 6 in two squares validly, 1 in four squares, and 7 in ten squares.
+#  In that case 6 is more likely to be the correct option for a square that has the options [7, 6, 1]
+#  In tha case we must order the list of valid values for that square as : [ 6, 1, 7 ] 
 def ordered_valid_valus(board, cache):
-   pass
+   value_frequencies = {}
+   
+   # Iterate through rows and columns to count the appearance of values
+   for row in range(9):
+      for col in range(9):
+         if (row, col) in cache:
+               for value in cache[(row, col)]:
+                  if value not in value_frequencies:
+                     value_frequencies[value] = 0
+                  value_frequencies[value] += 1
+
+
+   # Reorder the values in each cell based on their frequency
+   for row in range(9):
+      for col in range(9):
+         if (row, col) in cache:
+            cache[(row, col)] = sorted(cache[(row, col)], key=lambda x: value_frequencies.get(x, 0))
+
+   return cache
+
 
 def solve(board):
    empty_tile = find_empty(board)
