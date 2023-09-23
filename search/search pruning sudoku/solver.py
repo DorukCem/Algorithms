@@ -62,20 +62,15 @@ def ordered_valid_valus(board, cache):
    value_frequencies = {}
    
    # Iterate through rows and columns to count the appearance of values
-   for row in range(9):
-      for col in range(9):
-         if (row, col) in cache:
-               for value in cache[(row, col)]:
-                  if value not in value_frequencies:
-                     value_frequencies[value] = 0
-                  value_frequencies[value] += 1
-
+   for (row, col) in cache:
+      for value in cache[(row, col)]:
+         if value not in value_frequencies:
+            value_frequencies[value] = 0
+         value_frequencies[value] += 1
 
    # Reorder the values in each cell based on their frequency
-   for row in range(9):
-      for col in range(9):
-         if (row, col) in cache:
-            cache[(row, col)] = sorted(cache[(row, col)], key=lambda x: value_frequencies.get(x, 0))
+   for (row, col) in cache:
+      cache[(row, col)] = sorted(cache[(row, col)], key=lambda x: value_frequencies.get(x, 0))
 
    return cache
 
