@@ -1,3 +1,5 @@
+from collections import Counter
+
 # is num a passable answer for the given row and column  
 def is_valid(board, num, row, col):
    for y in range(len(board)):
@@ -59,18 +61,36 @@ def cache_valid_values(board):
 #  In that case 6 is more likely to be the correct option for a square that has the options [7, 6, 1]
 #  In tha case we must order the list of valid values for that square as : [ 6, 1, 7 ] 
 def ordered_valid_valus(board, cache):
-   value_frequencies = {}
+   
+   # Create dictionaries to store the frequency of values in rows, columns, and blocks
+   global_frequencies = {}
+   row_frequencies = [Counter() for _ in range(9)]
+   col_frequencies = [Counter() for _ in range(9)]
+   block_frequencies = [Counter() for _ in range(9)]
    
    # Iterate through rows and columns to count the appearance of values
-   for (row, col) in cache:
-      for value in cache[(row, col)]:
-         if value not in value_frequencies:
-            value_frequencies[value] = 0
-         value_frequencies[value] += 1
+   for row in range(9):
+      for col in range(9):
+         if (row, col) in cache:
+            for value in cache[(row, col)]:
+               # Update row, column, and block frequencies
+               global_frequencies[value] = global_frequencies.get(value, 0) + 1
+               row_frequencies[row][value] = row_frequencies[row].get(value, 0) + 1
+               col_frequencies[col][value] = col_frequencies[col].get(value, 0) + 1
+               block_id = (row // 3) * 3 + (col // 3)
+               block_frequencies[block_id][value] = block_frequencies[block_id].get(value, 0) + 1
+
 
    # Reorder the values in each cell based on their frequency
    for (row, col) in cache:
-      cache[(row, col)] = sorted(cache[(row, col)], key=lambda x: value_frequencies.get(x, 0))
+      cache[(row, col)] = sorted(cache[(row, col)], key=lambda x: global_frequencies.get(x, 0))
+
+   # If there is only one possible place where the value can be put, put it there 
+   for (row, col) in cache:
+      block_id = (row // 3) * 3 + (col // 3)
+      for value in cache[(row, col)]:
+         if row_frequencies[row][value] == 1 or col_frequencies[col][value] == 1 or block_frequencies[block_id][value] == 1:
+            board[row][col] = value
 
    return cache
 
