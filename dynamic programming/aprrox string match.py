@@ -1,3 +1,4 @@
+import pprint
 #Levenshtein distance
 def recursive(s1, s2):
    if s1 == "":
@@ -37,24 +38,25 @@ def dp(s1, s2):
    if s1 == "": return len(s2)
    if s2 == "": return len(s1)
 
-   p1, p2 = len(s1), len(s2)
-   cache = [[0]*p2 for _ in range(p1)]
+   cache = [[0]*(len(s2)+1) for _ in range(len(s1)+1)]
 
-   for i in range(p1):
+   for i in range(len(s1)+1):
       cache[i][0] = i
    
-   for j in range(p2):
+   for j in range(len(s2)):
       cache[0][j] = j
-   
-   for j in range(p2):
-      for i in range(p1):
-         if s1[i] == s2[j]:
-            continue
 
-         cache[i][j] = 1 + min(cache[i-1][j],
-                               cache[i][j-1],
-                               cache[i-1][j-1])
-   return cache[p1-1][p2-1]
+   for i in range(1, len(s1)+1):
+      for j in range(1, len(s2)+1):
+         if s1[i-1] == s2[j-1]:
+            cache[i][j] = cache[i - 1][j - 1]
+         else:
+            cache[i][j] = 1 + min(cache[i-1][j],  # remove letter
+                                 cache[i][j-1],   # add letter
+                                 cache[i-1][j-1]  # replace letter
+                              )
+   
+   return cache[len(s1)][len(s2)]
 
 print(dp("foo", "bar"))
 print(dp("apple", "dapple"))
@@ -63,3 +65,5 @@ print(dp("sky", "dye"))
 print(dp("", "b"))
 print(dp("a", ""))
 print(dp("", ""))
+print(dp("kitten", "sitting"))
+print(dp("sunday", "saturday"))
