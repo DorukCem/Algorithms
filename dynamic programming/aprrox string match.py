@@ -34,16 +34,23 @@ def pointers(s1, s2, p1 = None, p2 = None):
                   )
 
 # dynamic programming approach
+# Given the pointer locations, 
+# we keep a table of how much difference there is
+# for example lets say we have two string "ab", "aqc"
+# at 1,1 -> the difference is 0
+# at 2,2 -> the difference is cache[1][1] + 1 because we have to replace b with q
+# at 2,3 -> the difference is cache[2][2] + 1 because we have to add a letter
+# So cache[2][3] -> 2 -> (0 + 1 + 1)
 def dp(s1, s2):
    if s1 == "": return len(s2)
    if s2 == "": return len(s1)
 
    cache = [[0]*(len(s2)+1) for _ in range(len(s1)+1)]
 
-   for i in range(len(s1)+1):
-      cache[i][0] = i
-   
-   for j in range(len(s2)):
+   for i in range(len(s1)+1): 
+      cache[i][0] = i        
+                  
+   for j in range(len(s2)):  
       cache[0][j] = j
 
    for i in range(1, len(s1)+1):
@@ -55,8 +62,9 @@ def dp(s1, s2):
                                  cache[i][j-1],   # add letter
                                  cache[i-1][j-1]  # replace letter
                               )
-   
+
    return cache[len(s1)][len(s2)]
+
 
 print(dp("foo", "bar"))
 print(dp("apple", "dapple"))
